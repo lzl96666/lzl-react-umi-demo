@@ -108,7 +108,7 @@ axios.interceptors.response.use(
 )
 
 function sendJson(type, url, params) {
-  params = getToken(params)
+  // params = getToken(params)
   return new Promise((resolve, reject) => {
     axios({
       method: type,
@@ -164,7 +164,7 @@ function deleteJson(url, params) {
 }
 
 export function getToken(params) {
-  let userinfo = JSON.parse(localStorage.getItem('userinfo'))
+  let { userinfo } = JSON.parse(localStorage.getItem('userinfo'))
   if (userinfo.token) {
     params.token = userinfo.token
   }

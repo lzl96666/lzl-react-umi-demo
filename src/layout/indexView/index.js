@@ -1,9 +1,15 @@
 import React from 'react'
 import Link from 'umi/link'
 import styles from './index.css'
+import { connect } from 'dva'
 import { Layout, Menu, Icon, Badge, Dropdown } from 'antd'
 const { Header, Content, Footer } = Layout
-export default function index(props) {
+
+export default connect(state => ({
+  // 连接购物车状态
+  count: state.cart.length,
+  cart: state.cart
+}))(function index(props) {
   console.log(props)
   const { pathname } = props.location
   const menus = [
@@ -29,6 +35,16 @@ export default function index(props) {
     })
     .map(menu => menu.path)
 
+  const menu = (
+    <Menu>
+      {props.cart.map((item, index) => (
+        <Menu.Item key={index}>
+          {item.name}×{item.count} <span>￥{item.count * item.price}</span>
+        </Menu.Item>
+      ))}
+    </Menu>
+  )
+
   return (
     <div>
       <Layout>
@@ -53,7 +69,7 @@ export default function index(props) {
               <Link to="/about">关于</Link>
             </Menu.Item>
           </Menu>
-          <Dropdown placement="bottomRight">
+          <Dropdown overlay={menu} placement="bottomRight">
             <div style={{ float: 'right' }}>
               <Icon type="shopping-cart" style={{ fontSize: 18 }} />
               <span>我的购物车</span>
@@ -61,6 +77,7 @@ export default function index(props) {
             </div>
           </Dropdown>
         </Header>
+
         <Content>
           <Content className={styles.content}>
             <div className={styles.box}>{props.children}</div>
@@ -70,4 +87,4 @@ export default function index(props) {
       </Layout>
     </div>
   )
-}
+})
